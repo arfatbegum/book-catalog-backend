@@ -1,11 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropTable
-DROP TABLE "User";
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('admin', 'customer');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -57,11 +51,20 @@ CREATE TABLE "review_and_rating" (
 CREATE TABLE "order" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "orderedBooks" JSONB NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'pending',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "order_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ordered_book" (
+    "id" TEXT NOT NULL,
+    "orderId" TEXT NOT NULL,
+    "bookId" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL,
+
+    CONSTRAINT "ordered_book_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -78,3 +81,6 @@ ALTER TABLE "review_and_rating" ADD CONSTRAINT "review_and_rating_bookId_fkey" F
 
 -- AddForeignKey
 ALTER TABLE "order" ADD CONSTRAINT "order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ordered_book" ADD CONSTRAINT "ordered_book_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
