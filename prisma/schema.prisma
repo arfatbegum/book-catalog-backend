@@ -9,3 +9,79 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id              String            @id @default(uuid())
+  name            String
+  email           String            @unique
+  password        String
+  role            Role
+  contactNo       String
+  address         String
+  profileImg      String
+  ReviewAndRating ReviewAndRating[]
+  Order           Order[]
+
+  @@map("user")
+}
+
+enum Role {
+  admin
+  customer
+}
+
+model Category {
+  id    String @id @default(uuid())
+  title String
+  books Book[]
+
+  @@map("category")
+}
+
+model Book {
+  id                String            @id @default(uuid())
+  title             String
+  author            String
+  price             Float
+  genre             String
+  publicationDate   DateTime
+  categoryId        String
+  category          Category          @relation(fields: [categoryId], references: [id])
+  reviewsAndRatings ReviewAndRating[]
+
+  @@map("book")
+}
+
+model ReviewAndRating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  bookId String
+  user   User   @relation(fields: [userId], references: [id])
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  @@map("review_and_rating")
+}
+
+model Order {
+  id           String        @id @default(uuid())
+  userId       String
+  orderedBooks OrderedBook[]
+  status       String        @default("pending")
+  createdAt    DateTime      @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("order")
+}
+
+model OrderedBook {
+  id       String @id @default(uuid())
+  orderId  String
+  bookId   String
+  quantity Int
+  Order    Order  @relation(fields: [orderId], references: [id])
+
+  @@map("ordered_book")
+}
