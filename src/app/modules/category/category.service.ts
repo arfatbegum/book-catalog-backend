@@ -4,12 +4,15 @@ import prisma from '../../../shared/prisma';
 const createCategory = async (data: Category): Promise<Category> => {
   const result = await prisma.category.create({
     data,
+    include: {
+      books: true,
+    },
   });
   return result;
 };
 
 const getAllCategory = async () => {
-  return await prisma.user.findMany();
+  return await prisma.category.findMany();
 };
 
 const getSingleCategory = async (id: string): Promise<Category | null> => {
