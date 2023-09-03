@@ -8,26 +8,23 @@ import { CategoryValidation } from './category.validations';
 const router = express.Router();
 
 router.post(
-    '/create-category',
-    auth(ENUM_USER_ROLE.ADMIN),
-    validateRequest(CategoryValidation.createCategoryZodSchema),
-    CategoryController.createCategory
+  '/create-category',
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.createCategoryZodSchema),
+  CategoryController.createCategory
 );
-  
-router.put(
+
+router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),
   validateRequest(CategoryValidation.updateCategoryZodSchema),
   CategoryController.updateCategory
 );
 
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), CategoryController.getAllCategory);
+router.get('/', CategoryController.getAllCategory);
 
-router.get(
-  '/:id',
-  auth(ENUM_USER_ROLE.ADMIN),
-  CategoryController.getSingleCategory
-);
+router.get('/:id', CategoryController.getSingleCategory);
+
 router.delete(
   '/:id',
   auth(ENUM_USER_ROLE.ADMIN),

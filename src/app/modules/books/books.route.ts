@@ -15,30 +15,18 @@ router.patch(
 );
 
 router.post(
-    '/create-book',
-    auth(ENUM_USER_ROLE.ADMIN),
-    validateRequest(BookValidation.createBookZodSchema),
-    BookController.createBook
-);
-
-router.get('/',  BookController.getAllBooks);
-
-router.get(
-  '/:categoryId/category',
+  '/create-book',
   auth(ENUM_USER_ROLE.ADMIN),
-  BookController.getBooksByCategoryId
+  validateRequest(BookValidation.createBookZodSchema),
+  BookController.createBook
 );
 
-router.get(
-  '/:id',
-  auth(ENUM_USER_ROLE.ADMIN),
-  BookController.getSingleBook
-);
+router.get('/', BookController.getAllBooks);
 
-router.delete(
-  '/:id',
-  auth(ENUM_USER_ROLE.ADMIN),
-  BookController.deleteABook
-);
+router.get('/:categoryId/category', BookController.getBooksByCategoryId);
+
+router.get('/:id', BookController.getSingleBook);
+
+router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), BookController.deleteABook);
 
 export const BookRoutes = router;
