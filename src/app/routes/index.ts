@@ -28,6 +28,10 @@ const moduleRoutes = [
     path: "/orders",
     route: orderRoutes,
   },
+  {
+    path: "/profile",
+    route: UserRoutes,
+  },
 ];
 
 moduleRoutes.forEach(route => router.use(route.path, route.route));

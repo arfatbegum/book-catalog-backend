@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { User } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 
@@ -34,9 +35,23 @@ const deleteAUser = async (id: string): Promise<User | null> => {
   return result;
 };
 
+const getMyProfile = async (
+  userId: string,
+  userRole: string
+): Promise<User | null> => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+  });
+  return result;
+};
+
+
 export const UserService = {
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteAUser,
+  getMyProfile,
 };

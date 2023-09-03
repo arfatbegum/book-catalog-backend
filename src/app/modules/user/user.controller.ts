@@ -53,9 +53,24 @@ const deleteAUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.userId;
+  const userRole = req.user?.role;
+  
+  const result = await UserService.getMyProfile(userId, userRole);
+console.log(result)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "My Profile retrieved successfully",
+    data: result,
+  });
+});
+
 export const UserController = {
   getAllUsers,
   getSingleUser,
   updateUser,
-  deleteAUser
+  deleteAUser,
+  getMyProfile
 };
