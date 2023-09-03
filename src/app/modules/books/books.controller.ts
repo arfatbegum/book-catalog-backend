@@ -3,12 +3,12 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { BookFilterAbleFileds } from './books.constant';
 import { BookService } from './books.service';
+import { BookFilterAbleFileds } from './books.constant';
 
 const createBook = catchAsync(async (req: Request, res: Response) => {
-  const { ...categoryData } = req.body;
-  const result = await BookService.createBook(categoryData);
+  const { ...bookData } = req.body;
+  const result = await BookService.createBook(bookData);
 
   sendResponse(res, {
     success: true,

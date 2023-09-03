@@ -21,34 +21,47 @@ const getAllBook = async (
   options: IPaginationOptions
 ): Promise<IGenericResponse<Book[]>> => {
   const { page, size, skip } = paginationHelpers.calculatePagination(options);
-  const { search, minPrice, maxPrice, ...otherFilters } = filters;
+  const { search, minPrice, maxPrice, category, ...otherFilters } = filters;
 
   const andConditions = [];
 
   if (search) {
+    // Create an array of search conditions for specific fields
+    const searchConditions = BookSearchAbleFields.map(field => ({
+      [field]: {
+        contains: search,
+        mode: 'insensitive',
+      },
+    }));
+
     andConditions.push({
-      OR: BookSearchAbleFields.map(field => ({
-        [field]: {
-          contains: search,
-          mode: 'insensitive',
-        },
-      })),
+      OR: searchConditions,
     });
   }
 
   if (minPrice !== undefined || maxPrice !== undefined) {
     const priceCondition: { [key: string]: number } = {};
-
+  
     if (minPrice !== undefined) {
-      priceCondition['$gte'] = minPrice;
+      priceCondition['gte'] = parseFloat(minPrice.toString()); 
     }
-
+  
     if (maxPrice !== undefined) {
-      priceCondition['$lte'] = maxPrice;
+      priceCondition['lte'] = parseFloat(maxPrice.toString());
     }
-
+  
     andConditions.push({
       price: priceCondition,
+    });
+  }
+  
+  
+ 
+  if (category) {
+    andConditions.push({
+      category: {
+        id: category,
+      },
     });
   }
 
@@ -71,12 +84,8 @@ const getAllBook = async (
     take: size,
     orderBy:
       options.sortBy && options.sortOrder
-        ? {
-            [options.sortBy]: options.sortOrder,
-          }
-        : {
-            publicationDate: 'desc',
-          },
+        ? { [options.sortBy]: options.sortOrder }
+        : { price: 'desc' },
   });
 
   const total = await prisma.book.count();
